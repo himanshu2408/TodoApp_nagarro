@@ -30,20 +30,21 @@ app.put('/api/todos/:id', function (req, res) {
     var todo = todo_db.todos[mod_id];
 
     if(!todo){
-        res.json(400, {
+        res.status(400).json( {
             error: "Error!! Todo with this id does not exist."
         })
     }
     else {
-        var todo_title = req.body.title;
-        var todo_status = req.body.status;
+        var todo_title = req.body.todo_title;
+        var todo_status = req.body.todo_status;
         if(todo_title && todo_title !=="" && todo_title.trim() !== ""
             && todo_status && (todo_status === "COMPLETE" || todo_status === "DELETED")){
             todo.title = todo_title;
             todo.status = todo_status;
+            res.json(todo_db.todos);
         }
         else {
-            res.JSON(400,  {
+            res.status(400).json({
                 error: "Please input valid data"
             })
         }
@@ -52,7 +53,7 @@ app.put('/api/todos/:id', function (req, res) {
 });
 
 app.post('/api/todos', function (req, res) {
-    var todo_title = req.body.title;
+    var todo_title = req.body.todo_title;
     var next_todo_id = todo_db.next_todo_id;
     if(!todo_title || todo_title==="" || todo_title.trim()===""){
         res.json(400, {
@@ -60,9 +61,12 @@ app.post('/api/todos', function (req, res) {
         })
     }
     else {
-        todo_db.todos[next_todo_id].title = todo_title;
-        todo_db.todos[next_todo_id].status = todo_db.StatusENUMS.ACTIVE;
-        todo_db.todos[next_todo_id]++;
+        var new_todo = {
+            title: todo_title,
+            status: todo_db.StatusENUMS.ACTIVE
+        };
+        todo_db.todos[next_todo_id] = new_todo;
+        todo_db.next_todo_id++;
         res.json(todo_db.todos);
     }
 
@@ -73,7 +77,7 @@ app.delete('/api/todos/:id', function (req, res) {
     var todo = todo_db.todos[del_id];
 
     if(!todo){
-        res.json(400, {
+        res.status(400).json( {
             error: "Error!! Todo with this id does not exist."
         })
     }
