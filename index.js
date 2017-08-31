@@ -25,10 +25,36 @@ app.get('/api/todos', function (req, res) {
     res.json(todo_db.todos);
 });
 
+app.put('/api/todos/:id', function (req, res) {
+    var mod_id = req.params.id;
+    var todo = todo_db.todos[mod_id];
+
+    if(!todo){
+        res.json(400, {
+            error: "Error!! Todo with this id does not exist."
+        })
+    }
+    else {
+        var todo_title = req.body.title;
+        var todo_status = req.body.status;
+        if(todo_title && todo_title !=="" && todo_title.trim() !== ""
+            && todo_status && (todo_status === "COMPLETE" || todo_status === "DELETED")){
+            todo.title = todo_title;
+            todo.status = todo_status;
+        }
+        else {
+            res.JSON(400,  {
+                error: "Please input valid data"
+            })
+        }
+    }
+
+});
+
 app.post('/api/todos', function (req, res) {
     var todo_title = req.body.title;
     var next_todo_id = todo_db.next_todo_id;
-    if(!todo_title || todo_title=="" || todo_title.trim()==""){
+    if(!todo_title || todo_title==="" || todo_title.trim()===""){
         res.json(400, {
             error: "Error!!! Todo Title cannot be empty"
         })
@@ -41,6 +67,29 @@ app.post('/api/todos', function (req, res) {
     }
 
 });
+
+app.delete('/api/todos/:id', function (req, res) {
+    var del_id = req.params.id;
+    var todo = todo_db.todos[del_id];
+
+    if(!todo){
+        res.json(400, {
+            error: "Error!! Todo with this id does not exist."
+        })
+    }
+    else {
+        todo.status = todo_db.StatusENUMS.DELETED;
+        res.json(todo_db.todos);
+    }
+
+});
+
+
+
+
+
+
+
 
 
 app.get('/api/todos/active', function (req, res) {
