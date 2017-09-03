@@ -1,5 +1,4 @@
 var express = require('express');
-var path = require('path');
 var bodyParser = require('body-parser');
 var reload = require('reload');
 var morgan = require('morgan');
@@ -11,18 +10,21 @@ var todo_db = require('./seed');
 // Set Port
 app.set('port', process.env.PORT || 3000);
 
-//middlewares
+// ************middlewares************
 app.use('/',  bodyParser.urlencoded({extended: false}));
 app.use(morgan('dev'));
 
-//serve static files
+// ************serve static files************
 app.use('/', express.static(__dirname+"/public"));
 
+// ************routes************
 
+    // ************GET ALL TODOS************
 app.get('/api/todos', function (req, res) {
     res.json(todo_db.todos);
 });
 
+// ************UPDATE_TODO WITH ITS ID************
 app.put('/api/todos/:id', function (req, res) {
     var mod_id = req.params.id;
     var todo = todo_db.todos[mod_id];
@@ -50,6 +52,8 @@ app.put('/api/todos/:id', function (req, res) {
 
 });
 
+// ************ADD NEW_TODO************
+
 app.post('/api/todos', function (req, res) {
     var todo_title = req.body.todo_title;
     var next_todo_id = todo_db.next_todo_id;
@@ -70,6 +74,7 @@ app.post('/api/todos', function (req, res) {
 
 });
 
+// ************DELETE A PARTICULAR TODO************
 app.delete('/api/todos/:id', function (req, res) {
     var del_id = req.params.id;
     var todo = todo_db.todos[del_id];
@@ -93,6 +98,8 @@ app.delete('/api/todos/:id', function (req, res) {
 });
 
 
+// ************GET ALL ACTIVE TODOS************
+
 app.get('/api/todos/active', function (req, res) {
     var  active_todos = {};
     Object.keys(todo_db.todos).forEach(function (key) {
@@ -102,6 +109,8 @@ app.get('/api/todos/active', function (req, res) {
     });
     res.json(active_todos);
 });
+
+// ************GET ALL COMPLETED TODOS************
 
 app.get('/api/todos/complete', function (req, res) {
     var  complete_todos = {};
@@ -113,6 +122,7 @@ app.get('/api/todos/complete', function (req, res) {
     res.json(complete_todos);
 });
 
+// ************GET ALL DELETED TODOS************
 app.get('/api/todos/deleted', function (req, res) {
     var  deleted_todos = {};
     Object.keys(todo_db.todos).forEach(function (key) {
@@ -123,6 +133,7 @@ app.get('/api/todos/deleted', function (req, res) {
     res.json(deleted_todos);
 });
 
+// ************MARK_TODO AS COMPLETE************
 app.put("/api/todos/complete/:id", function (req, res) {
     todo_db.todos[req.params.id].status = todo_db.StatusENUMS.COMPLETE;
     var  complete_todos = {};
@@ -134,6 +145,8 @@ app.put("/api/todos/complete/:id", function (req, res) {
     res.json(complete_todos);
 });
 
+
+// ************MARK_TODO AS ACTIVE************
 app.put("/api/todos/active/:id", function (req, res) {
     todo_db.todos[req.params.id].status = todo_db.StatusENUMS.ACTIVE;
     var  active_todos = {};

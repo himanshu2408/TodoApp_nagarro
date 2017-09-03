@@ -7,7 +7,7 @@ const DELETED_TODOS_LIST_ID = "deleted-todos";
 const TODOS_LIST_ID = "todos_list_div";
 const new_todo_input = "new_todo_input";
 
-//window.onload = getTodosAJAX();
+
 window.onload = getActiveTodosAJAX();
 window.onload = getCompleteTodosAJAX();
 window.onload = getDeletedTodosAJAX();
@@ -47,14 +47,6 @@ function createTodoElement(id, todo_object) {
         active_checkbox.setAttribute("onclick", "completeTodoAJAX("+id+")");
         active_checkbox.setAttribute("class",  "checkbox-margin");
         todo_element.appendChild(active_checkbox);
-
-        /*
-        var complete_button = document.createElement("button");
-        complete_button.innerText = "Mark as Complete";
-        complete_button.setAttribute("onclick", "completeTodoAJAX("+id+")");
-        complete_button.setAttribute("class",  "breadthHorizontal button");
-        todo_element.appendChild(complete_button);
-        */
     }
 
     if(todo_object.status === "COMPLETE"){
@@ -78,14 +70,6 @@ function createTodoElement(id, todo_object) {
 
 
         todo_element.appendChild(close_button);
-
-        /*
-        var delete_button = document.createElement("button");
-        delete_button.innerText = "X";
-        delete_button.setAttribute("onclick", "deleteTodoAJAX("+id+")");
-        delete_button.setAttribute("class",  "breadthHorizontal button");
-        todo_element.appendChild(delete_button);
-        */
 
     }
     return todo_element;
@@ -245,7 +229,7 @@ $(document).ready(function(){
 
 $(document).ready(function(){
     $("#hide-deleted-button").click(function(){
-        $("#deleted-todos").fadeToggle(1000);
+        $("#deleted-todos").toggle();
 
     });
 });
