@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path');
 var bodyParser = require('body-parser');
 var reload = require('reload');
 var morgan = require('morgan');
@@ -17,9 +18,6 @@ app.use(morgan('dev'));
 //serve static files
 app.use('/', express.static(__dirname+"/public"));
 
-app.get('/', function (req, res) {
-    res.redirect('/api/todos');
-});
 
 app.get('/api/todos', function (req, res) {
     res.json(todo_db.todos);
@@ -83,29 +81,68 @@ app.delete('/api/todos/:id', function (req, res) {
     }
     else {
         todo.status = todo_db.StatusENUMS.DELETED;
-        res.json(todo_db.todos);
+        var  deleted_todos = {};
+        Object.keys(todo_db.todos).forEach(function (key) {
+            if(todo_db.todos[key].status === todo_db.StatusENUMS.DELETED){
+                deleted_todos[key] = todo_db.todos[key];
+            }
+        });
+        res.json(deleted_todos);
     }
 
 });
 
 
-
-
-
-
-
-
-
 app.get('/api/todos/active', function (req, res) {
-    res.send("active");
+    var  active_todos = {};
+    Object.keys(todo_db.todos).forEach(function (key) {
+        if(todo_db.todos[key].status === todo_db.StatusENUMS.ACTIVE){
+            active_todos[key] = todo_db.todos[key];
+        }
+    });
+    res.json(active_todos);
 });
 
 app.get('/api/todos/complete', function (req, res) {
-    res.send("complete");
+    var  complete_todos = {};
+    Object.keys(todo_db.todos).forEach(function (key) {
+        if(todo_db.todos[key].status === todo_db.StatusENUMS.COMPLETE){
+            complete_todos[key] = todo_db.todos[key];
+        }
+    });
+    res.json(complete_todos);
 });
 
 app.get('/api/todos/deleted', function (req, res) {
-    res.send("delete");
+    var  deleted_todos = {};
+    Object.keys(todo_db.todos).forEach(function (key) {
+        if(todo_db.todos[key].status === todo_db.StatusENUMS.DELETED){
+            deleted_todos[key] = todo_db.todos[key];
+        }
+    });
+    res.json(deleted_todos);
+});
+
+app.put("/api/todos/complete/:id", function (req, res) {
+    todo_db.todos[req.params.id].status = todo_db.StatusENUMS.COMPLETE;
+    var  complete_todos = {};
+    Object.keys(todo_db.todos).forEach(function (key) {
+        if(todo_db.todos[key].status === todo_db.StatusENUMS.COMPLETE){
+            complete_todos[key] = todo_db.todos[key];
+        }
+    });
+    res.json(complete_todos);
+});
+
+app.put("/api/todos/active/:id", function (req, res) {
+    todo_db.todos[req.params.id].status = todo_db.StatusENUMS.ACTIVE;
+    var  active_todos = {};
+    Object.keys(todo_db.todos).forEach(function (key) {
+        if(todo_db.todos[key].status === todo_db.StatusENUMS.ACTIVE){
+            active_todos[key] = todo_db.todos[key];
+        }
+    });
+    res.json(active_todos);
 });
 
 reload(app);
