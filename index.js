@@ -8,7 +8,7 @@ var app = express();
 var todo_db = require('./seed');
 
 // Set Port
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || 3000);
 
 // ************middlewares************
 app.use('/',  bodyParser.urlencoded({extended: false}));

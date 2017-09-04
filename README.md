@@ -44,12 +44,12 @@ npm start
 ```
 and your server will be up and running.
 
-Visit localhost:4000 to load the project in your browser.
-Default port is 4000, you can change it in index.js
+Visit localhost:3000 to load the project in your browser.
+Default port is 3000, you can change it in index.js
 
 ## Built With
 
-* [NodeJS] (https://nodejs.org/) - Used for developing backend services.
+* [NodeJS](https://nodejs.org/) - Used for developing backend services.
 * [Bootstrap](https://v4-alpha.getbootstrap.com/getting-started/) - Used for frontend designing.
 
 
